@@ -1,15 +1,22 @@
 import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import {ImageViewer} from "@/common/components/ImageViewer";
+import {ButtonCustom} from "@/common/components/ButtonCustom";
 
 const PlaceholderImage = require('src/assets/images/background-image.png');
 
 export default function App() {
+
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageViewer image={PlaceholderImage}/>
       </View>
+
+      <ButtonCustom callback={()=>alert('hi')}>
+        <Text style={{color:'#fff', fontSize:16}}>add</Text>
+      </ButtonCustom>
       <StatusBar style="auto"/>
     </View>
   );
