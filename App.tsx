@@ -1,8 +1,8 @@
 import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ImageViewer} from "common/components/ImageViewer";
 import {ButtonCustom} from "common/components/ButtonCustom";
-import {Entypo, FontAwesome} from "@expo/vector-icons";
+import {Entypo} from "@expo/vector-icons";
 
 const PlaceholderImage = require('assets/images/background-image.png');
 
@@ -50,6 +50,6 @@ const styles = StyleSheet.create({
   },
   bcButton: {
     backgroundColor: "#98b4d9",
-    color:"#000"
+    color:"#000",
   },
 });

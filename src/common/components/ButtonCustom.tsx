@@ -1,10 +1,10 @@
 import React, {ReactNode} from 'react';
-import {Pressable, View, StyleSheet, Text} from "react-native";
+import {Pressable, View, StyleSheet, Text, ViewStyle} from "react-native";
 
 
 type Props = {
   name?:string,
-  style?: any,
+  style?: ViewStyle,
   children?: ReactNode,
   callback: () => void
 }
@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row-reverse',
   },
-
   buttonLabel: {
     color: '#98b4d9',
     fontSize: 16,
