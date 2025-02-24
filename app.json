@@ -6,12 +6,13 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "jsEngine": "hermes",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -29,6 +30,9 @@
     },
     "experiments": {
       "tsconfigPaths": true
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
