@@ -1,11 +1,12 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { ImageEdit } from "features/imageEdit";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function Index() {
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <ImageEdit />
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
