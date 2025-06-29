@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { ImageSourcePropType, StyleSheet, View } from "react-native";
+import { ImageSourcePropType, Platform, StyleSheet, View } from "react-native";
 import { ImageViewer } from "common/components/ImageViewer";
 import { ButtonCustom } from "common/components/ButtonCustom";
 import { Entypo } from "@expo/vector-icons";
@@ -11,59 +11,89 @@ import EmojiList from "common/components/EmojiList";
 import EmojiSticker from "common/components/EmojiSticker";
 import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
+import domtoimage from "dom-to-image";
 
+// Placeholder image для начального состояния
 const PlaceholderImage = require("assets/images/background-image.png");
 
 export const ImageEdit = () => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); //для сохранения состояния изображения
+  // URI выбранного изображения из галереи, null если не выбрано
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  // Показывать основные кнопки («Reset», «Add Sticker», «Save»)
   const [showAppOptions, setShowAppOptions] = useState<boolean>(true);
+  // Модалка выбора стикера отображается?
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  // Выбранный стикер (Emoji), передаётся в EmojiSticker
   const [pickedEmoji, setPickedEmoji] = useState<ImageSourcePropType | undefined>(undefined);
+  // Работа с разрешениями на доступ к медиатеке (Android / iOS)
   const [status, requestPermission] = MediaLibrary.usePermissions();
-
+  // Ref для снимка экрана
   const imageRef = useRef<View>(null);
-
+  // Открыть галерею и выбрать изображение
   const pickImageAsync = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
-      allowsEditing: true, //можно обрезать изображение при установке на телефонах, но не в web
-      quality: 1,
+      allowsEditing: true, // позволяет обрезать картинку
+      quality: 1, // максимальное качество
     });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri); //save image in value selectedImage
+      // Сохраняем uri выбранного изображения
+      setSelectedImage(result.assets[0].uri);
+      // Показываем кнопки для работы с изображением
       setShowAppOptions(true);
     } else {
       alert("You did not select any image.");
     }
   };
+  // Сбросить выбор изображения и скрыть опции
   const onReset = () => {
     setShowAppOptions(false);
+    setSelectedImage(null);
+    setPickedEmoji(undefined);
   };
-
+  // Показать модальное окно выбора Emoji
   const onAddSticker = () => {
     setIsModalVisible(true);
   };
+  // Закрыть модалку выбора Emoji
   const onModalClose = () => {
     setIsModalVisible(false);
   };
-
+  // Сохранить текущее состояние View (изображение + стикеры) в медиатеку
   const onSaveImageAsync = async () => {
-    try {
-      const localUri = await captureRef(imageRef, {
-        height: 440,
-        quality: 1,
-      });
-
-      await MediaLibrary.saveToLibraryAsync(localUri);
-      if (localUri) {
+    if (Platform.OS !== "web") {
+      try {
+        // Захватываем снимок экрана (View с imageRef)
+        const localUri = await captureRef(imageRef, {
+          height: 440, // высота скрина
+          quality: 1, // качество
+        });
+        // Сохраняем изображение в медиатеку устройства
+        await MediaLibrary.saveToLibraryAsync(localUri);
         alert("Saved!");
+      } catch (e) {
+        console.error(e);
+        alert("Failed to save image.");
       }
-    } catch (e) {
-      console.log(e);
+    } else {
+      try {
+        const dataUrl = await domtoimage.toJpeg(imageRef.current, {
+          quality: 0.95,
+          width: 320,
+          height: 440,
+        });
+
+        let link = document.createElement("a");
+        link.download = "sticker-smash.jpeg";
+        link.href = dataUrl;
+        link.click();
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
-
+  // Если нет статуса разрешений, запрашиваем
   if (status === null) {
     requestPermission();
   }
@@ -77,6 +107,7 @@ export const ImageEdit = () => {
         </View>
       </View>
 
+      {/* Опции: Reset, Add Sticker, Save */}
       {showAppOptions ? (
         <View style={styles.optionsContainer}>
           <View style={styles.optionsRow}>
@@ -106,6 +137,7 @@ export const ImageEdit = () => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -123,7 +155,6 @@ const styles = StyleSheet.create({
   buttonIcon: {
     paddingRight: 8,
   },
-
   bcButton: {
     backgroundColor: "#98b4d9",
   },
@@ -131,12 +162,11 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   optionsContainer: {
-    display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
   },
   optionsRow: {
-    alignItems: "center",
     flexDirection: "row",
+    alignItems: "center",
   },
 });
