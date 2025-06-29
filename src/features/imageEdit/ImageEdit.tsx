@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ImageSourcePropType, StyleSheet, View } from "react-native";
 import { ImageViewer } from "common/components/ImageViewer";
 import { ButtonCustom } from "common/components/ButtonCustom";
 import { Entypo } from "@expo/vector-icons";
@@ -8,7 +8,6 @@ import CircleButton from "common/components/CircleButton";
 import IconButton from "common/components/IconButton";
 import EmojiPicker from "common/components/EmojiPicker";
 import EmojiList from "common/components/EmojiList";
-import { ImageSource } from "expo-image";
 import EmojiSticker from "common/components/EmojiSticker";
 import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
@@ -19,7 +18,7 @@ export const ImageEdit = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null); //для сохранения состояния изображения
   const [showAppOptions, setShowAppOptions] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(undefined);
+  const [pickedEmoji, setPickedEmoji] = useState<ImageSourcePropType | undefined>(undefined);
   const [status, requestPermission] = MediaLibrary.usePermissions();
 
   const imageRef = useRef<View>(null);
@@ -72,7 +71,7 @@ export const ImageEdit = () => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <View ref={imageRef} collapsable={false}>
+        <View ref={imageRef} collapsable={false} style={{ height: "100%" }}>
           <ImageViewer image={PlaceholderImage} selectedImage={selectedImage} />
           {pickedEmoji && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />}
         </View>
@@ -113,9 +112,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageContainer: {
-    flex: 1,
-    height: 320,
+    height: "80%",
     width: 320,
+    marginBottom: 30,
   },
   footerContainer: {
     alignItems: "center",
@@ -135,7 +134,6 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
-    bottom: 50,
   },
   optionsRow: {
     alignItems: "center",

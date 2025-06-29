@@ -1,11 +1,11 @@
-import { type ImageSource } from "expo-image";
+import { ImageSourcePropType } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 // Определяем тип пропсов, которые принимает компонент
 type Props = {
   imageSize: number; // Размер изображения
-  stickerSource: ImageSource; // Источник изображения (файл или URL)
+  stickerSource: ImageSourcePropType; // Источник изображения (файл или URL)
 };
 
 // Экспортируем функциональный компонент
@@ -60,7 +60,13 @@ export default function EmojiSticker({ imageSize, stickerSource }: Props) {
           <Animated.Image
             source={stickerSource} // Источник изображения
             resizeMode="contain" // Устанавливаем режим изменения размера
-            style={[imageStyle, { width: imageSize, height: imageSize }]} // Применяем анимированные стили
+            style={[
+              imageStyle,
+              {
+                width: imageSize,
+                height: imageSize,
+              },
+            ]} // Применяем анимированные стили
           />
         </GestureDetector>
       </Animated.View>
