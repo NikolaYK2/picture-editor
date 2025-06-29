@@ -9,15 +9,13 @@ type Props = {
 export const ImageViewer = ({ image, selectedImage }: Props) => {
   const imageSource = selectedImage ? { uri: selectedImage } : image;
 
-  return <Image style={styles.image} source={imageSource} />;
+  return <Image style={styles.image} source={imageSource} contentFit={"cover"} />;
 };
 
 const styles = StyleSheet.create({
   image: {
-    maxWidth: 320,
-    width: "100%",
-    maxHeight: 440,
-    height: "100%",
     borderRadius: 18,
+    width: "100%",
+    height: "100%",
   },
 });
